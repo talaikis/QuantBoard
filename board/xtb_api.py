@@ -3,7 +3,7 @@ from asyncio import get_event_loop
 
 from websockets import connect
 
-from . import settings
+import settings
 
 
 def Params(command, **kwargs):

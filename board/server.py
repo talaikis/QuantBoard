@@ -1,21 +1,30 @@
-from pandas import DataFrame, read_pickle
+from os.path import join
+from asyncio import get_event_loop
+
+from pandas import DataFrame, read_csv, to_datetime
 from flask import Flask, jsonify, make_response, request
+
+import settings
 
 
 app = Flask(__name__)
 
 
 async def get_data():
-    pass
-   
+    if settings.USE_LOCAL:
+        for s in settings.WATCHLIST_MAP:
+            symbol = s.split(",")[0]
+            print(symbol)
+            filename = join(settings.DATA_FOLDER, 
+                "DATA_MODEL_{0}_{1}_{2}.csv".format(settings.BROKER, symbol, settings.PERIOD))
+            print(filename)
+            data = read_csv(filepath_or_buffer=filename, sep=',', header=0, names=None, index_col=0)
+            data.sort_index(axis=0, ascending=True, inplace=True)
+            data.index = to_datetime(data.index).to_pydatetime()
+            print(data)
 
 
-async def keep_alive():
-    pass
-
-
-
-
+get_event_loop().run_until_complete(get_data())
 
 """
 1. Get defined data from XTB
@@ -104,5 +113,5 @@ def unauthorized():
 
 
 if __name__ == '__main__':
-    app.run(debug=environ.get("DEBUG"))
+    app.run(debug=settings.DEBUG)
 """
