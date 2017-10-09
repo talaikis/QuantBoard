@@ -2,3 +2,4 @@ flask
 flask-restful
 python-dotenv
 websockets
+pandas
