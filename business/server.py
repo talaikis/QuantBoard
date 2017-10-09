@@ -1,28 +1,26 @@
-from os import environ
-from os.path import dirname, join
+from pandas import DataFrame, read_pickle
+from flask import Flask, jsonify, make_response, request
 
-from dotenv import load_dotenv
-from flask import Flask, jsonify, make_response, request, HTTPBasicAuth
-
-BASE_DIR = dirname(dirname(__file__))
-load_dotenv(join(BASE_DIR, '.env'))
 
 app = Flask(__name__)
-auth = HTTPBasicAuth()
 
-INDICATORS = []
-PERIOD = 60
-SYMBOLS = []
 
-def login():
+async def get_data():
     pass
+   
+
+
+async def keep_alive():
+    pass
+
+
+
 
 
 """
 1. Get defined data from XTB
 2. Calculate indicators on data
 3. Present data and indicators via API for Electron
-"""
 
 tasks = [
     {
@@ -107,3 +105,4 @@ def unauthorized():
 
 if __name__ == '__main__':
     app.run(debug=environ.get("DEBUG"))
+"""
