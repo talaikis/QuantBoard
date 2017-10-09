@@ -7,9 +7,10 @@ from dotenv import load_dotenv
 BASE_DIR = dirname(dirname(abspath(__file__)))
 load_dotenv(join(BASE_DIR, '.env'))
 
+DEBUG = environ.get("DEBUG")
 WATCHLIST_MAP = environ.get("WATCHLIST_MAP").replace(" ", "").split("|")
-PERIOD = int(environ.get("PERIOD"))
 BROKER = environ.get("BROKER")
+PERIOD = int(environ.get("PERIOD"))
 USERID = int(environ.get("XTB_USER"))
 PASSWORD = environ.get("XTB_PASSWORD")
 API = environ.get("API_URL")
