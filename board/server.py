@@ -1,12 +1,14 @@
 from os.path import join
+from datetime import datetime, timedelta
+from functools import lru_cache
 
 from numpy import where, round
-from pandas import DataFrame, read_csv, to_datetime
-from flask import Flask, jsonify, make_response, request, abort
+from pandas import read_csv, to_datetime
+from flask import Flask, jsonify, abort
+from pandas_datareader import data as web
 
 import settings
 from _private.indicators import Indicators
-
 
 app = Flask(__name__)
 
@@ -63,6 +65,16 @@ def get_skew(returns):
     return datas
 
 
+@lru_cache(maxsize=None)
+def get_yahoo(symbol="^VIX"):
+    n = datetime.now()
+    start = n - timedelta(1)
+    end = n
+    data = web.DataReader(symbol, 'yahoo', start, end)
+
+    return data
+
+
 def get_data(symbol, indicator, period):
     if settings.USE_LOCAL:
         data = get_dataframe(symbol=symbol)
@@ -72,8 +84,7 @@ def get_data(symbol, indicator, period):
         prob = get_prob(returns=returns)
         returns_mean = get_mean(returns=returns)
         skew = get_skew(returns=returns)
-
-        # 3. get vix status
+        vix = get_yahoo()
 
         j = {
             'symbol': symbol,
@@ -92,6 +103,10 @@ def get_data(symbol, indicator, period):
                 'skewness': skew[43200],
                 'probability': prob[43200],
                 'avg_return': returns_mean[43200]
+            },
+            'vix': {
+                'close': vix.iloc[1].Close,
+                'gap_up': str(vix.iloc[0].Close > vix.iloc[1].Open),
             }
         }
         return j
@@ -111,11 +126,6 @@ def get_symbols():
 @app.route('/api/v1.0/data/<string:symbol>/<string:indicator>/<int:period>', methods=['GET'])
 def api_data(symbol, indicator, period):
     return jsonify(get_data(symbol=symbol, indicator=indicator, period=period))
-
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify({'Error': 'Not found'}), 404)
 
 
 if __name__ == '__main__':
