@@ -106,7 +106,7 @@ def get_data(symbol, indicator, period):
             },
             'vix': {
                 'close': vix.iloc[1].Close,
-                'gap_up': str(vix.iloc[0].Close > vix.iloc[1].Open),
+                'gap_up': str(vix.iloc[0].Close < vix.iloc[1].Open),
             }
         }
         return j
