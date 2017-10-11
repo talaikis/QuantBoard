@@ -20,7 +20,7 @@ def get_filename(symbol, tf):
 
 def get_dataframe(symbol):
     datas = {}
-    for i in settings.TFS:
+    for i in iter(settings.TFS):
         data = read_csv(filepath_or_buffer=get_filename(symbol=symbol, tf=i), sep=',', 
             header=0, names=None, index_col=0)
         data.sort_index(axis=0, ascending=True, inplace=True)
@@ -35,7 +35,7 @@ def get_dataframe(symbol):
 
 def get_returns(data):
     datas = {}
-    for i in settings.TFS:
+    for i in iter(settings.TFS):
         datas[i] = data[i].CLOSE.pct_change().dropna()
 
     return datas
@@ -43,7 +43,7 @@ def get_returns(data):
 
 def get_prob(returns):
     datas = {}
-    for i in settings.TFS:
+    for i in iter(settings.TFS):
         datas[i] = round(sum(where(returns[i] > 0, 1, 0)) / len(returns[i].index), 2)
 
     return datas
@@ -51,7 +51,7 @@ def get_prob(returns):
 
 def get_mean(returns):
     datas = {}
-    for i in settings.TFS:
+    for i in iter(settings.TFS):
         datas[i] = round(returns[i].mean(), 2)
 
     return datas
@@ -59,7 +59,7 @@ def get_mean(returns):
 
 def get_skew(returns):
     datas = {}
-    for i in settings.TFS:
+    for i in iter(settings.TFS):
         datas[i] = round(returns[i].skew(), 2)
 
     return datas
@@ -117,7 +117,7 @@ def get_data(symbol, indicator, period):
 @app.route('/api/v1.0/symbols', methods=['GET'])
 def get_symbols():
     symbols = []
-    for s in settings.WATCHLIST_MAP:
+    for s in iter(settings.WATCHLIST_MAP):
         symbol = s.split(",")[0]
         symbols.append({"SYMBOL": symbol})
     return jsonify(symbols)
