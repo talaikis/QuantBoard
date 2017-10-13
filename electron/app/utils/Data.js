@@ -1,5 +1,6 @@
-import { csvParse } from  "d3-dsv";
+import { tsvParse, csvParse } from  "d3-dsv";
 import { timeParse } from "d3-time-format";
+import axios from 'axios';
 
 function parseData(parse) {
 	return function(d) {
@@ -17,8 +18,8 @@ function parseData(parse) {
 const parseDate = timeParse("%Y-%m-%d");
 
 export function getData() {
-	const promiseData = fetch("//127.0.0.1:5000/api/v1.0/data/BTCUSD/LVAR/200")
-		.then(response => response.text())
-		.then(data => csvParse(data.data, parseData(parseDate)))
-	return promiseData;
+	const promise = axios.get('http://127.0.0.1:5000/api/v1.0/data/BTCUSD/LVAR/200')
+		.then(response => response.data)
+		.then(data => tsvParse(data, parseData(parseDate)))
+	return promise;
 }

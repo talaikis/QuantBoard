@@ -75,11 +75,17 @@ def get_yahoo(symbol="^VIX"):
     return data
 
 
+def data_getter(symbol, indicator, period):
+    data = get_dataframe(symbol=symbol)
+    indie = Indicators(data=data[settings.TIMEFRAME], period=period, indicator=indicator)
+    data[settings.TIMEFRAME] = indie.value()
+
+    return data
+
+
 def get_data(symbol, indicator, period):
     if settings.USE_LOCAL:
-        data = get_dataframe(symbol=symbol)
-        indie = Indicators(data=data[settings.TIMEFRAME], period=period, indicator=indicator)
-        data[settings.TIMEFRAME] = indie.value()
+        data = data_getter(symbol=symbol, indicator=indicator)
         returns = get_returns(data=data)
         prob = get_prob(returns=returns)
         returns_mean = get_mean(returns=returns)

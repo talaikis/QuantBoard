@@ -5,7 +5,7 @@ class Indicators:
     def __init__(self, data, period, indicator):
         self.data = data
         self.indicator = indicator
-        self.period = period
+        self.period = int(period)
 
     def value(self):
         if self.indicator == "RSI":

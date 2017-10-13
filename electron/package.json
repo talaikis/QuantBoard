@@ -163,6 +163,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "d3-dsv": "^1.0.7",
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",

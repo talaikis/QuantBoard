@@ -9,6 +9,7 @@ load_dotenv(join(BASE_DIR, '.env'))
 
 DEBUG = environ.get("DEBUG")
 WATCHLIST_MAP = environ.get("WATCHLIST_MAP").replace(" ", "").split("|")
+INDICATORS = environ.get("INDICATORS").replace(" ", "").split("|")
 BROKER = environ.get("BROKER")
 TIMEFRAME = int(environ.get("MAIN_TIMEFRAME"))
 TFS = [TIMEFRAME, 10080, 43200]
